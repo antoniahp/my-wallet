@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from bank.domain.account_number import AccountNumber
+from bank.domain.account import Account
 from bank.domain.user import User
 
 
@@ -11,7 +11,7 @@ class UserAdmin(admin.ModelAdmin):
         #'account_number',
         #'funds_amount',
     ]
-class AccountNumberAdmin(admin.ModelAdmin):
+class AccountAdmin(admin.ModelAdmin):
     list_display = [
         'account_number',
         'funds_amount',
@@ -19,4 +19,4 @@ class AccountNumberAdmin(admin.ModelAdmin):
 
 # Register your models here.
 admin.site.register(User, UserAdmin)
-admin.site.register(AccountNumber, AccountNumberAdmin)
+admin.site.register(Account, AccountAdmin)

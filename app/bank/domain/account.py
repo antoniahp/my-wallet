@@ -3,7 +3,7 @@ from django.db import models
 from bank.domain.user import User
 
 
-class AccountNumber(models.Model):
+class Account(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     account_number = models.CharField(max_length=50, unique=True)
     funds_amount = models.DecimalField(max_digits=10, decimal_places=2)
