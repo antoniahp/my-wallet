@@ -11,5 +11,6 @@ class UserCreator:
             born_date=born_date,
             email=email,
             phone=phone,
-            identification_number=identification_number
+            identification_number=identification_number,
+            created_at=date.today()
         )
