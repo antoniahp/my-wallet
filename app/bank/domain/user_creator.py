@@ -1,5 +1,4 @@
 from datetime import date
-
 from bank.domain.user import User
 
 
@@ -12,5 +11,4 @@ class UserCreator:
             email=email,
             phone=phone,
             identification_number=identification_number,
-            created_at=date.today()
         )

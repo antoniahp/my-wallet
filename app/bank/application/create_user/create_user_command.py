@@ -1,6 +1,7 @@
 import uuid
 from dataclasses import dataclass
 from datetime import date
+from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -12,4 +13,3 @@ class CreateUserCommand:
     email: str
     phone: str
     identification_number: str
-    created_at: date
