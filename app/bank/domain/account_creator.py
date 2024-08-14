@@ -5,7 +5,7 @@ from bank.domain.account import Account
 
 
 class AccountCreator:
-    def create(self, account_number: str, funds_amount:Decimal, user_id: uuid):
+    def create(self, account_number: str, funds_amount:Decimal, user_id: str):
         return Account(
             account_number=account_number,
             funds_amount=funds_amount,
