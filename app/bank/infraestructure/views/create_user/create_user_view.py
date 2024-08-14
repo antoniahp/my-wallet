@@ -10,7 +10,7 @@ from bank.application.create_user.create_user_command import CreateUserCommand
 from bank.application.create_user.create_user_command_handler import CreateUserCommandHandler
 from bank.domain.user_creator import UserCreator
 from bank.infraestructure.db_user_repository import DbUserRepository
-from bank.infraestructure.views.create_user_schema import CreateUserSchema
+from bank.infraestructure.views.create_user.create_user_schema import CreateUserSchema
 from pydantic import ValidationError
 
 

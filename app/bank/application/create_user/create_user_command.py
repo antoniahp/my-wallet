@@ -1,12 +1,11 @@
-import uuid
 from dataclasses import dataclass
 from datetime import date
-from typing import Optional
+from uuid import UUID
 
 
 @dataclass(frozen=True)
 class CreateUserCommand:
-    id: uuid
+    id: UUID
     name: str
     surname: str
     born_date: date
