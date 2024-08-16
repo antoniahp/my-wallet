@@ -34,7 +34,7 @@ class DepositMoneyView(View):
 
         command = DepositAmountCommand(
             account_number=deposit_money_schema.account_number,
-            withdraw_amount=deposit_money_schema.withdraw_amount,
+            deposit_amount=deposit_money_schema.deposit_amount,
 
         )
         self.__deposit_money_command_handler.handle(command)

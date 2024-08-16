@@ -9,5 +9,5 @@ class DepositMoneyCommandHandler:
 
     def handle(self, command:DepositAmountCommand):
         account_filtered = self.account_repository.get_account_by_iban(account_number=command.account_number)
-        account_filtered.funds_amount = account_filtered.funds_amount + command.withdraw_amount
+        account_filtered.funds_amount = account_filtered.funds_amount + command.deposit_amount
         self.account_repository.save_account(account_filtered)
