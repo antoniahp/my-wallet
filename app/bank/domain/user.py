@@ -1,4 +1,6 @@
 import uuid
+from datetime import date
+
 from django.db import models
 
 
@@ -15,3 +17,10 @@ class User(models.Model):
 
     def __str__(self):
         return f"{self.name} {self.surname}"
+
+    def calculate_age(self):
+        today = date.today()
+        age = today.year - self.born_date.year
+        if today < date(today.year, self.born_date.month, self.born_date.day):
+            age -= 1
+        return age

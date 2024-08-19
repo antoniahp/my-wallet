@@ -9,15 +9,14 @@ class CreateUserCommandHandler:
         self.user_creator = user_creator
 
     def handle(self, command:CreateUserCommand):
-        user_filtered = self.user_repository.get_user_by_identification_number(identification_number=command.identification_number)
-        if user_filtered is None:
-           user_created = self.user_creator.create(
-                name=command.name,
-                surname = command.surname,
-                born_date = command.born_date,
-                email = command.email,
-                phone=command.phone,
-                identification_number=command.identification_number,
-            )
 
-           self.user_repository.save_user(user_created)
+       user_created = self.user_creator.create(
+            name=command.name,
+            surname = command.surname,
+            born_date = command.born_date,
+            email = command.email,
+            phone=command.phone,
+            identification_number=command.identification_number,
+        )
+
+       self.user_repository.save_user(user_created)
