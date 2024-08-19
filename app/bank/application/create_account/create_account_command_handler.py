@@ -1,7 +1,7 @@
 from bank.application.create_account.create_account_command import CreateAccountCommand
 from bank.domain.account_creator import AccountCreator
 from bank.domain.account_repository import AccountRepository
-from bank.domain.exceptions.create_account.identification_number_not_found import IdentificationNumberNotFoundException
+from bank.domain.exceptions.create_account.identification_number_not_found_exception import IdentificationNumberNotFoundException
 from bank.domain.user_repository import UserRepository
 
 

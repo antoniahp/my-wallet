@@ -1,7 +1,7 @@
 from decimal import Decimal
 from bank.domain.account import Account
 from bank.domain.account_repository import AccountRepository
-from bank.domain.exceptions.create_account.account_already_exists import AccountAlreadyExists
+from bank.domain.exceptions.create_account.account_already_exists import AccountAlreadyExistsException
 
 
 class AccountCreator:
@@ -12,7 +12,7 @@ class AccountCreator:
     def create(self, account_number: str, funds_amount:Decimal, user_id: str):
         validate_account_number = self.account_repository.get_account_by_iban(account_number=account_number)
         if validate_account_number is not None:
-            raise AccountAlreadyExists(account_number=account_number)
+            raise AccountAlreadyExistsException(account_number=account_number)
 
         return Account(
             account_number=account_number,

@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from bank.application.create_user.create_user_command import CreateUserCommand
 from bank.application.create_user.create_user_command_handler import CreateUserCommandHandler
-from bank.domain.exceptions.create_user.user_already_exists import UserAlreadyExists
+from bank.domain.exceptions.create_user.user_already_exists_exception import UserAlreadyExistsException
 from bank.domain.user_creator import UserCreator
 from bank.infraestructure.db_user_repository import DbUserRepository
 from bank.infraestructure.views.create_user.create_user_schema import CreateUserSchema
@@ -52,7 +52,7 @@ class CreateUserView(View):
             self.__create_user_command_handler.handle(command)
             return JsonResponse({'id': str(id)}, status=201)
 
-        except UserAlreadyExists:
+        except UserAlreadyExistsException:
             return JsonResponse({'Error': "You can't create a user with his identification number"}, status=400)
 
         except Exception:
