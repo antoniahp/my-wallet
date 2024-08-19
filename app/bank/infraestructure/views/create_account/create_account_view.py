@@ -35,12 +35,13 @@ class CreateAccountView(View):
         except ValidationError as e:
             print(e.json())
             # Retornar una respuesta de error si la validación falla
-            return JsonResponse({'error': 'Invalid input', 'details': e.json()}, status=400)
+            return JsonResponse({'error': 'Schema Error', 'details': e.json()}, status=400)
 
 
         id = uuid4()
         command = CreateAccountCommand(
             account_id=id,
+            user_id=create_account_schema.user_id,
             identification_number=create_account_schema.identification_number,
             account_number=create_account_schema.account_number,
             funds_amount=create_account_schema.funds_amount,
