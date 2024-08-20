@@ -1,7 +1,7 @@
 from bank.application.create_account.create_account_command import CreateAccountCommand
 from bank.domain.account_creator import AccountCreator
 from bank.domain.account_repository import AccountRepository
-from bank.domain.exceptions.create_account.identification_number_not_found import IdentificationNumberNotFoundException
+from bank.domain.exceptions.create_account.identification_number_not_found_exception import IdentificationNumberNotFoundException
 from bank.domain.user_repository import UserRepository
 
 
@@ -17,7 +17,7 @@ class CreateAccountCommandHandler:
         if user_filtered is None:
             raise IdentificationNumberNotFoundException(command.identification_number)
 
-        if user_filtered is not None:
+        else:
             account_created=self.account_creator.create(
                 user_id=user_filtered.id,
                 account_number=command.account_number,

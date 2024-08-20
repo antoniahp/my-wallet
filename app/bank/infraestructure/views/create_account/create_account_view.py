@@ -23,7 +23,7 @@ class CreateAccountView(View):
         super().__init__()
         self.__db_user_repository = DbUserRepository()
         self.__db_account_repository = DbAccountRepository()
-        self.__account_creator = AccountCreator()
+        self.__account_creator = AccountCreator(account_repository=self.__db_account_repository)
         self.__create_account_command_handler = CreateAccountCommandHandler(user_repository=self.__db_user_repository, account_creator=self.__account_creator, account_repository=self.__db_account_repository)
 
 
