@@ -17,7 +17,7 @@ class CreateAccountCommandHandler:
         if user_filtered is None:
             raise IdentificationNumberNotFoundException(command.identification_number)
 
-        if user_filtered is not None:
+        else:
             account_created=self.account_creator.create(
                 user_id=user_filtered.id,
                 account_number=command.account_number,

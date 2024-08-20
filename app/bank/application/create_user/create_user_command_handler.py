@@ -9,7 +9,6 @@ class CreateUserCommandHandler:
         self.user_creator = user_creator
 
     def handle(self, command:CreateUserCommand):
-
        user_created = self.user_creator.create(
             name=command.name,
             surname = command.surname,
