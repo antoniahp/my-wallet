@@ -9,3 +9,5 @@ class CreateUserSchema(BaseModel):
     email: str
     phone: str
     identification_number: str
+    username: str
+    password: str

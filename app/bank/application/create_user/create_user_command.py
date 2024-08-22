@@ -12,3 +12,5 @@ class CreateUserCommand:
     email: str
     phone: str
     identification_number: str
+    username: str
+    hashed_password: str
