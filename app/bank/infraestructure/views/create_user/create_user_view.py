@@ -1,6 +1,7 @@
 import json
 from uuid import uuid4
 
+from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -13,8 +14,6 @@ from bank.domain.user_creator import UserCreator
 from bank.infraestructure.db_user_repository import DbUserRepository
 from bank.infraestructure.views.create_user.create_user_schema import CreateUserSchema
 from pydantic import ValidationError
-
-
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -46,6 +45,8 @@ class CreateUserView(View):
             email=create_user_schema.email,
             phone=create_user_schema.phone,
             identification_number=create_user_schema.identification_number,
+            username=create_user_schema.username,
+            hashed_password=make_password(create_user_schema.password)
 
         )
         try:
@@ -55,5 +56,5 @@ class CreateUserView(View):
         except UserAlreadyExistsException:
             return JsonResponse({'Error': "You can't create a user with his identification number"}, status=400)
 
-        except Exception:
+        except Exception as e:
             return JsonResponse({'Error': "server error"}, status=500)
