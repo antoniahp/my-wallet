@@ -5,6 +5,9 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from pydantic import ValidationError
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from bank.application.transfer_money.transfer_money_command import TransferMoneyCommand
 from bank.application.transfer_money.transfer_money_command_handler import TransferMoneyCommandHandler
@@ -12,7 +15,10 @@ from bank.infraestructure.db_account_repository import DbAccountRepository
 from bank.infraestructure.views.transfer_money.transfer_money_schema import TransferMoneySchema
 
 @method_decorator(csrf_exempt, name="dispatch")
-class TransferMoneyView(View):
+class TransferMoneyView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def __init__(self):
         super().__init__()
         self.__db_account_repository = DbAccountRepository()

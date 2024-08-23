@@ -4,6 +4,9 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from bank.application.deposit_money.deposit_money_command import DepositAmountCommand
 from bank.application.deposit_money.deposit_money_command_handler import DepositMoneyCommandHandler
@@ -15,7 +18,10 @@ from bank.infraestructure.views.deposit_money.deposit_money_schema import Deposi
 
 
 @method_decorator(csrf_exempt, name="dispatch")
-class DepositMoneyView(View):
+class DepositMoneyView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def __init__(self):
         super().__init__()
         self.__db_account_repository = DbAccountRepository()

@@ -18,8 +18,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 
-
-
 @method_decorator(csrf_exempt, name="dispatch")
 class CreateAccountView(APIView):
     authentication_classes = [JWTAuthentication]
