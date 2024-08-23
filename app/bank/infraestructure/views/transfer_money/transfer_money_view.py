@@ -33,7 +33,7 @@ class TransferMoneyView(APIView):
             return JsonResponse({'error': 'Schema error', 'details': e.json()}, status=400)
 
         command = TransferMoneyCommand(
-            user_id=transfer_money_schema.user_id,
+            user_id=request.user.id,
             sender_account_number=transfer_money_schema.sender_account_number,
             recipient_account_number=transfer_money_schema.recipient_account_number,
             amount_to_send=transfer_money_schema.amount_to_send

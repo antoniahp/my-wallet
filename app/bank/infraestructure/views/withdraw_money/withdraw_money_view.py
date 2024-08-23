@@ -40,7 +40,7 @@ class WithdrawMoneyView(APIView):
         command = WithdrawAmountCommand(
             account_number=withdraw_money_schema.account_number,
             withdraw_amount=withdraw_money_schema.withdraw_amount,
-            user_id=withdraw_money_schema.user_id
+            user_id=request.user.id,
 
         )
         self.__withdraw_money_command_handler.handle(command)

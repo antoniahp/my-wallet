@@ -41,7 +41,7 @@ class DepositMoneyView(APIView):
         command = DepositAmountCommand(
             account_number=deposit_money_schema.account_number,
             deposit_amount=deposit_money_schema.deposit_amount,
-            user_id=deposit_money_schema.user_id
+            user_id=request.user.id,
 
         )
         self.__deposit_money_command_handler.handle(command)
