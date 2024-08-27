@@ -31,6 +31,9 @@ class CreateAccountView(APIView):
 
 
     def post(self, request):
+        if not request.user.has_perm("bank.add_account"):
+            return JsonResponse({'error': 'Non permission'}, status=403)
+
         request_body = json.loads(request.body)
 
         try:
