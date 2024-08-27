@@ -4,6 +4,9 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from bank.application.withdraw_money.withdraw_money_command import WithdrawAmountCommand
 from bank.application.withdraw_money.withdraw_money_command_handler import WithdrawMoneyCommandHandler
@@ -15,7 +18,9 @@ from bank.infraestructure.views.withdraw_money.withdraw_money_schema import With
 
 
 @method_decorator(csrf_exempt, name="dispatch")
-class WithdrawMoneyView(View):
+class WithdrawMoneyView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def __init__(self):
         super().__init__()
         self.__db_account_repository = DbAccountRepository()
@@ -35,7 +40,7 @@ class WithdrawMoneyView(View):
         command = WithdrawAmountCommand(
             account_number=withdraw_money_schema.account_number,
             withdraw_amount=withdraw_money_schema.withdraw_amount,
-            user_id=withdraw_money_schema.user_id
+            user_id=request.user.id,
 
         )
         self.__withdraw_money_command_handler.handle(command)

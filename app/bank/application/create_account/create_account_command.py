@@ -5,7 +5,7 @@ from decimal import Decimal
 
 @dataclass(frozen=True)
 class CreateAccountCommand:
-    user_id:str
+    user_id: UUID
     identification_number: str
     account_id: UUID
     account_number: str

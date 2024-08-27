@@ -18,8 +18,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 
-
-
 @method_decorator(csrf_exempt, name="dispatch")
 class CreateAccountView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -46,7 +44,7 @@ class CreateAccountView(APIView):
         id = uuid4()
         command = CreateAccountCommand(
             account_id=id,
-            user_id=str(request.user.id),
+            user_id=request.user.id,
             identification_number=request.user.identification_number,
             account_number=create_account_schema.account_number,
             funds_amount=create_account_schema.funds_amount,
