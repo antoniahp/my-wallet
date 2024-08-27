@@ -11,9 +11,11 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from bank.application.deposit_money.deposit_money_command import DepositAmountCommand
 from bank.application.deposit_money.deposit_money_command_handler import DepositMoneyCommandHandler
 from bank.domain.account import Account
+from bank.domain.historic_movement_creator import HistoricMovementCreator
 from bank.infraestructure.db_account_repository import DbAccountRepository
 from pydantic import ValidationError
 
+from bank.infraestructure.db_historic_movemen_repository import DbHistoricMovementRepository
 from bank.infraestructure.views.deposit_money.deposit_money_schema import DepositMoneySchema
 
 
@@ -25,7 +27,9 @@ class DepositMoneyView(APIView):
     def __init__(self):
         super().__init__()
         self.__db_account_repository = DbAccountRepository()
-        self.__deposit_money_command_handler = DepositMoneyCommandHandler( account_repository=self.__db_account_repository)
+        self.__db_historic_movement_repository = DbHistoricMovementRepository()
+        self.__historic_movement_creator = HistoricMovementCreator()
+        self.__deposit_money_command_handler = DepositMoneyCommandHandler( account_repository=self.__db_account_repository, historic_movement_repository=self.__db_historic_movement_repository, historic_movement_creator=self.__historic_movement_creator)
 
 
     def post(self, request):
@@ -42,6 +46,7 @@ class DepositMoneyView(APIView):
             account_number=deposit_money_schema.account_number,
             deposit_amount=deposit_money_schema.deposit_amount,
             user_id=request.user.id,
+            concept=deposit_money_schema.concept
 
         )
         self.__deposit_money_command_handler.handle(command)

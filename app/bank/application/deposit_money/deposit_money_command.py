@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from decimal import Decimal
 from uuid import UUID
 
 
@@ -6,4 +7,5 @@ from uuid import UUID
 class DepositAmountCommand:
     user_id: UUID
     account_number: str
-    deposit_amount: int
+    deposit_amount: Decimal
+    concept: str
