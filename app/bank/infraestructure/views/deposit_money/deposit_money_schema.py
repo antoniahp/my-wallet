@@ -1,8 +1,10 @@
 from decimal import Decimal
+from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
 class DepositMoneySchema(BaseModel):
-    account_number: str
+    source_account: UUID
     deposit_amount: Decimal
-    concept: str
+    concept: Optional[str]

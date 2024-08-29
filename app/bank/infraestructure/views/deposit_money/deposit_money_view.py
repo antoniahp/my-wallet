@@ -1,4 +1,5 @@
 import json
+from uuid import uuid4
 
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
@@ -41,13 +42,13 @@ class DepositMoneyView(APIView):
             print(e.json())
             return JsonResponse({'error': 'Schema error', 'details': e.json()}, status=400)
 
-
+        id = uuid4()
         command = DepositAmountCommand(
-            account_number=deposit_money_schema.account_number,
+            historic_movement_id=id,
+            source_account=deposit_money_schema.source_account,
             deposit_amount=deposit_money_schema.deposit_amount,
             user_id=request.user.id,
             concept=deposit_money_schema.concept
-
         )
         self.__deposit_money_command_handler.handle(command)
 

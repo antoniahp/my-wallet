@@ -15,18 +15,20 @@ class DepositMoneyCommandHandler:
         self.historic_movement_creator = historic_movement_creator
 
     def handle(self, command:DepositAmountCommand):
-        account_filtered = self.account_repository.get_account_by_iban(account_number=command.account_number, select_for_update=True)
         with transaction.atomic():
+            account_filtered = self.account_repository.get_account_by_id(source_account=command.source_account, select_for_update=True)
+
             if account_filtered is None:
-                raise AccountNotFoundException(account_number=command.account_number)
+                raise AccountNotFoundException(source_account=command.source_account)
             account_filtered.funds_amount = account_filtered.funds_amount + command.deposit_amount
             historic_movement = self.historic_movement_creator.create(
-                user_account_number=account_filtered.id,
+
+                source_account=account_filtered.id,
                 category=MovementCategories.DEPOSIT_MONEY.value,
                 balance=account_filtered.funds_amount,
                 delta_amount=command.deposit_amount,
                 concept=command.concept,
-                recipient=None
+                target_account=None
             )
 
             self.historic_movement_repository.save_movement(historic_movement)
