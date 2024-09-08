@@ -1,6 +1,11 @@
+from decimal import Decimal
+from typing import Optional
+from uuid import UUID
+
 from pydantic import BaseModel
 
 
 class WithdrawMoneySchema(BaseModel):
-    account_number: str
-    withdraw_amount: int
+    source_account: UUID
+    withdraw_amount: Decimal
+    concept: Optional[str]
