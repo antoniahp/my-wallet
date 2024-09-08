@@ -8,9 +8,9 @@ from bank.domain.historic_movement_repository import HistoricMovementRepository
 
 class HistoricMovementCreator:
 
-    def create(self, source_account: UUID, category: str, balance: Decimal, delta_amount: Decimal, concept: Optional[str], target_account: Optional[UUID]):
+    def create(self, source_account_id: UUID, category: str, balance: Decimal, delta_amount: Decimal, concept: Optional[str], target_account: Optional[UUID]):
         return HistoricMovement(
-            source_account=source_account,
+            source_account_id=source_account_id,
             category=category,
             balance=balance,
             delta_amount=delta_amount,

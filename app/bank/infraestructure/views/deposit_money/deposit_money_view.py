@@ -52,5 +52,5 @@ class DepositMoneyView(APIView):
         )
         self.__deposit_money_command_handler.handle(command)
 
-        funds_amount = Account.objects.get(account_number=deposit_money_schema.account_number).funds_amount
+        funds_amount = Account.objects.get(id=deposit_money_schema.source_account).funds_amount
         return JsonResponse({'message': f'Su saldo es de {funds_amount}€'}, status=200)

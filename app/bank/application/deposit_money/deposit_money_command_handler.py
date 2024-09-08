@@ -22,8 +22,7 @@ class DepositMoneyCommandHandler:
                 raise AccountNotFoundException(source_account=command.source_account)
             account_filtered.funds_amount = account_filtered.funds_amount + command.deposit_amount
             historic_movement = self.historic_movement_creator.create(
-
-                source_account=account_filtered.id,
+                source_account_id=account_filtered.id,
                 category=MovementCategories.DEPOSIT_MONEY.value,
                 balance=account_filtered.funds_amount,
                 delta_amount=command.deposit_amount,
