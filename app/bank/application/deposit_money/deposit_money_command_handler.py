@@ -27,7 +27,7 @@ class DepositMoneyCommandHandler:
                 balance=account_filtered.funds_amount,
                 delta_amount=command.deposit_amount,
                 concept=command.concept,
-                target_account=None
+                target_account_id=None
             )
 
             self.historic_movement_repository.save_movement(historic_movement)

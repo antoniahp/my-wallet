@@ -30,7 +30,7 @@ class DepositMoneyView(APIView):
         self.__db_account_repository = DbAccountRepository()
         self.__db_historic_movement_repository = DbHistoricMovementRepository()
         self.__historic_movement_creator = HistoricMovementCreator()
-        self.__deposit_money_command_handler = DepositMoneyCommandHandler( account_repository=self.__db_account_repository, historic_movement_repository=self.__db_historic_movement_repository, historic_movement_creator=self.__historic_movement_creator)
+        self.__deposit_money_command_handler = DepositMoneyCommandHandler(account_repository=self.__db_account_repository, historic_movement_repository=self.__db_historic_movement_repository, historic_movement_creator=self.__historic_movement_creator)
 
 
     def post(self, request):

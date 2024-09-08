@@ -24,11 +24,11 @@ class WithdrawMoneyCommandHandler:
                 account_filtered.funds_amount = account_filtered.funds_amount - command.withdraw_amount
                 historic_movement = self.historic_movement_creator.create(
                     source_account_id=account_filtered.id,
-                    category=MovementCategories.DEPOSIT_MONEY.value,
+                    category=MovementCategories.WITHDRAW_MONEY.value,
                     balance=account_filtered.funds_amount,
                     delta_amount=command.withdraw_amount,
                     concept=command.concept,
-                    target_account=None
+                    target_account_id=None
                 )
                 self.historic_movement_repository.save_movement(historic_movement)
                 self.account_repository.save_account(account_filtered)
