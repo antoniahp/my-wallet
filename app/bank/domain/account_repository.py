@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from datetime import datetime
+from typing import Optional, List
+from unicodedata import decimal
 from uuid import UUID
 
 from bank.domain.account import Account
@@ -15,3 +17,6 @@ class AccountRepository(ABC):
         pass
 
 
+    @abstractmethod
+    def filter_accounts(self, account_number: Optional[str] = None, funds_amount: Optional[decimal] = None) -> List[Account]:
+        pass
