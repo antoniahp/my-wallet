@@ -1,4 +1,5 @@
 import json
+from uuid import uuid4
 
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
@@ -11,9 +12,11 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from bank.application.deposit_money.deposit_money_command import DepositAmountCommand
 from bank.application.deposit_money.deposit_money_command_handler import DepositMoneyCommandHandler
 from bank.domain.account import Account
+from bank.domain.historic_movement_creator import HistoricMovementCreator
 from bank.infraestructure.db_account_repository import DbAccountRepository
 from pydantic import ValidationError
 
+from bank.infraestructure.db_historic_movemen_repository import DbHistoricMovementRepository
 from bank.infraestructure.views.deposit_money.deposit_money_schema import DepositMoneySchema
 
 
@@ -25,7 +28,9 @@ class DepositMoneyView(APIView):
     def __init__(self):
         super().__init__()
         self.__db_account_repository = DbAccountRepository()
-        self.__deposit_money_command_handler = DepositMoneyCommandHandler( account_repository=self.__db_account_repository)
+        self.__db_historic_movement_repository = DbHistoricMovementRepository()
+        self.__historic_movement_creator = HistoricMovementCreator()
+        self.__deposit_money_command_handler = DepositMoneyCommandHandler(account_repository=self.__db_account_repository, historic_movement_repository=self.__db_historic_movement_repository, historic_movement_creator=self.__historic_movement_creator)
 
 
     def post(self, request):
@@ -37,14 +42,15 @@ class DepositMoneyView(APIView):
             print(e.json())
             return JsonResponse({'error': 'Schema error', 'details': e.json()}, status=400)
 
-
+        id = uuid4()
         command = DepositAmountCommand(
-            account_number=deposit_money_schema.account_number,
+            historic_movement_id=id,
+            source_account=deposit_money_schema.source_account,
             deposit_amount=deposit_money_schema.deposit_amount,
             user_id=request.user.id,
-
+            concept=deposit_money_schema.concept
         )
         self.__deposit_money_command_handler.handle(command)
 
-        funds_amount = Account.objects.get(account_number=deposit_money_schema.account_number).funds_amount
+        funds_amount = Account.objects.get(id=deposit_money_schema.source_account).funds_amount
         return JsonResponse({'message': f'Su saldo es de {funds_amount}€'}, status=200)

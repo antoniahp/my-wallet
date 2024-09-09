@@ -19,6 +19,7 @@ class CreateAccountCommandHandler:
 
         else:
             account_created=self.account_creator.create(
+                account_id=command.account_id,
                 user_id=user_filtered.id,
                 account_number=command.account_number,
                 funds_amount=command.funds_amount,
