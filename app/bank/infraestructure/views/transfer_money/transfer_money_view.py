@@ -13,7 +13,7 @@ from bank.application.transfer_money.transfer_money_command import TransferMoney
 from bank.application.transfer_money.transfer_money_command_handler import TransferMoneyCommandHandler
 from bank.domain.historic_movement_creator import HistoricMovementCreator
 from bank.infraestructure.db_account_repository import DbAccountRepository
-from bank.infraestructure.db_historic_movemen_repository import DbHistoricMovementsRepository
+from bank.infraestructure.db_historic_movemen_repository import DbHistoricMovementRepository
 from bank.infraestructure.views.transfer_money.transfer_money_schema import TransferMoneySchema
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -24,7 +24,7 @@ class TransferMoneyView(APIView):
     def __init__(self):
         super().__init__()
         self.__db_account_repository = DbAccountRepository()
-        self.__db_historic_movement_repository = DbHistoricMovementsRepository()
+        self.__db_historic_movement_repository = DbHistoricMovementRepository()
         self.__historic_movement_creator = HistoricMovementCreator()
         self.__transfer_money_command_handler = TransferMoneyCommandHandler(account_repository=self.__db_account_repository, historic_movement_repository=self.__db_historic_movement_repository, historic_movement_creator=self.__historic_movement_creator)
 

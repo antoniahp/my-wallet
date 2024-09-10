@@ -7,7 +7,7 @@ from uuid import UUID
 from bank.domain.historic_movement import HistoricMovement
 
 
-class HistoricMovementsRepository(ABC):
+class HistoricMovementRepository(ABC):
     @abstractmethod
     def filter_movement(self, source_account:Optional[UUID] = None, created_at:Optional[datetime] = None):
         pass

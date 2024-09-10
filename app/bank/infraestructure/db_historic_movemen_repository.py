@@ -5,10 +5,10 @@ from uuid import UUID
 from django.db.models import Q
 
 from bank.domain.historic_movement import HistoricMovement
-from bank.domain.historic_movement_repository import HistoricMovementsRepository
+from bank.domain.historic_movement_repository import HistoricMovementRepository
 
 
-class DbHistoricMovementsRepository(HistoricMovementsRepository):
+class DbHistoricMovementRepository(HistoricMovementRepository):
     def filter_movement(self, source_account:Optional[UUID] = None, created_at:Optional[datetime] = None):
         filters = Q()
         if source_account is not None:
