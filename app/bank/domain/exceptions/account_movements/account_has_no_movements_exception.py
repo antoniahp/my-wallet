@@ -1,5 +1,3 @@
-from uuid import UUID
-
 
 class AccountHasNoMovementsException(Exception):
 

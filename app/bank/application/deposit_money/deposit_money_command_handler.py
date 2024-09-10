@@ -16,14 +16,14 @@ class DepositMoneyCommandHandler:
 
     def handle(self, command:DepositAmountCommand):
         with transaction.atomic():
-            user_accounts = self.account_repository.filter_accounts(user_id=command.user_id)
             account_filtered = self.account_repository.get_account_by_id(source_account=command.source_account,select_for_update=True)
+
+            if account_filtered.user_id != command.user_id:
+                raise CanNotOperateOnThisAccountException()
 
             if account_filtered is None:
                 raise AccountNotFoundException(source_account=command.source_account)
 
-            if account_filtered not in user_accounts:
-                raise CanNotOperateOnThisAccountException()
 
             account_filtered.funds_amount = account_filtered.funds_amount + command.deposit_amount
             historic_movement = self.historic_movement_creator.create(

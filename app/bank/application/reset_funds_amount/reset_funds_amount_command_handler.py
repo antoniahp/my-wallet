@@ -15,9 +15,9 @@ class ResetFundsAmountCommandHandler(CommandHandler):
     def handle(self, command: ResetFundsAmountCommand):
         all_accounts = self.__account_repository.filter_accounts()
         for account in all_accounts:
-           if all_accounts == 0:
-               raise AccountHasNoMovementsException()
            last_account_movement = self.__historic_movement_repository.filter_movement(source_account=account.id)
+           if not last_account_movement:
+               raise AccountHasNoMovementsException()
            updated_account = self.__account_updater.update(
                account=account,
                funds_amount=last_account_movement[0].balance

@@ -18,14 +18,15 @@ class TransferMoneyCommandHandler:
 
     def handle(self, command:TransferMoneyCommand):
         with transaction.atomic():
-            user_accounts = self.account_repository.filter_accounts(user_id=command.user_id)
             sender_account_filtered = self.account_repository.get_account_by_id(source_account=command.sender_account_id, select_for_update=True)
             recipient_account_filtered = self.account_repository.get_account_by_id(source_account=command.recipient_account_id, select_for_update=True)
+
+            if sender_account_filtered.user_id != command.user_id:
+                raise CanNotOperateOnThisAccountException()
+
             if recipient_account_filtered is None:
                 raise RecipientAccountNotFoundException(recipient_account_number=command.recipient_account_id)
 
-            if sender_account_filtered not in user_accounts:
-                raise CanNotOperateOnThisAccountException()
 
             if sender_account_filtered.funds_amount < command.amount_to_send:
                 raise ThereIsNotEnoughMoneyInTheAccountException()

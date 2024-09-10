@@ -11,11 +11,7 @@ class BreakDatabaseCommandHandler(CommandHandler):
 
     def handle(self, command:BreakDatabaseCommand):
         all_accounts = self.__account_repository.filter_accounts()
-        accounts_modified = []
         new_funds_amount = Decimal(0.0)
         for account in all_accounts:
             account.funds_amount = new_funds_amount
-            accounts_modified.append(account)
-
-        for account in accounts_modified:
             self.__account_repository.save_account(account)
