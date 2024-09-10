@@ -3,7 +3,6 @@ from typing import Optional
 from uuid import UUID
 
 from bank.domain.historic_movement import HistoricMovement
-from bank.domain.historic_movement_repository import HistoricMovementRepository
 
 
 class HistoricMovementCreator:

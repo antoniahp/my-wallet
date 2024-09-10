@@ -15,7 +15,7 @@ from bank.domain.historic_movement_creator import HistoricMovementCreator
 from bank.infraestructure.db_account_repository import DbAccountRepository
 from pydantic import ValidationError
 
-from bank.infraestructure.db_historic_movemen_repository import DbHistoricMovementRepository
+from bank.infraestructure.db_historic_movemen_repository import DbHistoricMovementsRepository
 from bank.infraestructure.views.deposit_money.deposit_money_schema import DepositMoneySchema
 
 
@@ -27,7 +27,7 @@ class DepositMoneyView(APIView):
     def __init__(self):
         super().__init__()
         self.__db_account_repository = DbAccountRepository()
-        self.__db_historic_movement_repository = DbHistoricMovementRepository()
+        self.__db_historic_movement_repository = DbHistoricMovementsRepository()
         self.__historic_movement_creator = HistoricMovementCreator()
         self.__deposit_money_command_handler = DepositMoneyCommandHandler(account_repository=self.__db_account_repository, historic_movement_repository=self.__db_historic_movement_repository, historic_movement_creator=self.__historic_movement_creator)
 
