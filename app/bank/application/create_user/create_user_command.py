@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from datetime import date
 from uuid import UUID
+from cqrs.commands.command import Command
 
 
 @dataclass(frozen=True)
-class CreateUserCommand:
+class CreateUserCommand(Command):
     id: UUID
     name: str
     surname: str

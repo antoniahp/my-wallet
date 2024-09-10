@@ -2,9 +2,7 @@ from django.core.management import BaseCommand
 
 from bank.application.reset_funds_amount.reset_funds_amount_command import ResetFundsAmountCommand
 from bank.application.reset_funds_amount.reset_funds_amount_command_handler import ResetFundsAmountCommandHandler
-from bank.domain.account_repository import AccountRepository
 from bank.domain.account_updater import AccountUpdater
-from bank.domain.historic_movement_repository import HistoricMovementRepository
 from bank.infraestructure.db_account_repository import DbAccountRepository
 from bank.infraestructure.db_historic_movemen_repository import DbHistoricMovementRepository
 

@@ -1,7 +1,5 @@
 from django.db import transaction
-
 from bank.application.deposit_money.deposit_money_command import DepositAmountCommand
-from bank.domain import user
 from bank.domain.account_repository import AccountRepository
 from bank.domain.exceptions.account_movements.cannot_operate_on_this_account_exception import CanNotOperateOnThisAccountException
 from bank.domain.exceptions.deposit_money.account_not_found_exception import AccountNotFoundException

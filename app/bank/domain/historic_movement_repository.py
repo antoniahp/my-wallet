@@ -14,8 +14,6 @@ class HistoricMovementRepository(ABC):
         pass
 
 
-
-
     @abstractmethod
     def save_movement(self, historic_movement: HistoricMovement) -> None:
         pass

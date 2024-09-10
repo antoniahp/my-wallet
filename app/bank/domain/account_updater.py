@@ -1,5 +1,4 @@
 from decimal import Decimal
-
 from bank.domain.account import Account
 
 

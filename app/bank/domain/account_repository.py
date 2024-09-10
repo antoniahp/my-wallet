@@ -16,7 +16,6 @@ class AccountRepository(ABC):
     def save_account(self, account: Account) -> None:
         pass
 
-
     @abstractmethod
     def filter_accounts(self, user_id:Optional[UUID]=None, account_number: Optional[str] = None, funds_amount: Optional[decimal] = None) -> List[Account]:
         pass

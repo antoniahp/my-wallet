@@ -1,5 +1,4 @@
 from decimal import Decimal
-
 from bank.application.break_database.break_database_command import BreakDatabaseCommand
 from bank.domain.account_repository import AccountRepository
 from cqrs.commands.command_handler import CommandHandler

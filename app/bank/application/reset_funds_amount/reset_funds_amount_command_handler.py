@@ -23,9 +23,3 @@ class ResetFundsAmountCommandHandler(CommandHandler):
                funds_amount=last_account_movement[0].balance
            )
            self.__account_repository.save_account(updated_account)
-
-
-
-
-
-

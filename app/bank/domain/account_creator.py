@@ -1,6 +1,5 @@
 from decimal import Decimal
 from uuid import UUID
-
 from bank.domain.account import Account
 from bank.domain.account_repository import AccountRepository
 from bank.domain.exceptions.create_account.account_already_exists_exception import AccountAlreadyExistsException
