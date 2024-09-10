@@ -11,8 +11,8 @@ class Command(BaseCommand):
     def __init__(self):
         super().__init__()
         self.__db_account_repository = DbAccountRepository()
-        self.break_database_command_handler = BreakDatabaseCommandHandler(self.__db_account_repository )
+        self.__break_database_command_handler = BreakDatabaseCommandHandler(self.__db_account_repository )
 
     def handle(self, *args, **options):
         command = BreakDatabaseCommand()
-        self.break_database_command_handler.handle(command)
+        self.__break_database_command_handler.handle(command)
