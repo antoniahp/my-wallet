@@ -2,6 +2,7 @@ from django.db import transaction
 
 from bank.application.transfer_money.transfer_money_command import TransferMoneyCommand
 from bank.domain.account_repository import AccountRepository
+from bank.domain.exceptions.account_movements.cannot_operate_on_this_account_exception import CanNotOperateOnThisAccountException
 from bank.domain.exceptions.transfer_money.recipient_account_not_found_exception import RecipientAccountNotFoundException
 from bank.domain.exceptions.transfer_money.there_is_not_enough_money_in_the_account_exception import ThereIsNotEnoughMoneyInTheAccountException
 from bank.domain.historic_movement_creator import HistoricMovementCreator
@@ -17,10 +18,14 @@ class TransferMoneyCommandHandler:
 
     def handle(self, command:TransferMoneyCommand):
         with transaction.atomic():
+            user_accounts = self.account_repository.filter_accounts(user_id=command.user_id)
             sender_account_filtered = self.account_repository.get_account_by_id(source_account=command.sender_account_id, select_for_update=True)
             recipient_account_filtered = self.account_repository.get_account_by_id(source_account=command.recipient_account_id, select_for_update=True)
             if recipient_account_filtered is None:
-                raise RecipientAccountNotFoundException(recipient_account_number=command.recipient_account_number)
+                raise RecipientAccountNotFoundException(recipient_account_number=command.recipient_account_id)
+
+            if sender_account_filtered not in user_accounts:
+                raise CanNotOperateOnThisAccountException()
 
             if sender_account_filtered.funds_amount < command.amount_to_send:
                 raise ThereIsNotEnoughMoneyInTheAccountException()

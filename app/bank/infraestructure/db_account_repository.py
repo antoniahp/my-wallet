@@ -23,8 +23,10 @@ class DbAccountRepository(AccountRepository):
         account.save()
 
 
-    def filter_accounts(self, account_number: Optional[str] = None, funds_amount: Optional[decimal] = None) -> List[Account]:
+    def filter_accounts(self, user_id:Optional[UUID]=None, account_number: Optional[str] = None, funds_amount: Optional[decimal] = None) -> List[Account]:
         filters = Q()
+        if user_id is not None:
+            filters = filters & Q(user_id=user_id)
         if account_number is not None:
             filters = filters & Q(account_number=account_number)
         if funds_amount is not None:
