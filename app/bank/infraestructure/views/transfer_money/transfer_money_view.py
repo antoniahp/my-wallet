@@ -3,7 +3,6 @@ from uuid import uuid4
 
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
-from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from pydantic import ValidationError
 from rest_framework.permissions import IsAuthenticated
@@ -48,4 +47,3 @@ class TransferMoneyView(APIView):
         )
         self.__transfer_money_command_handler.handle(command)
         return JsonResponse({'message': 'Transferencia realizada correctamente'}, status=200)
-

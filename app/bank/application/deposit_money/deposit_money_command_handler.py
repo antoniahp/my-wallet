@@ -1,7 +1,7 @@
 from django.db import transaction
-
 from bank.application.deposit_money.deposit_money_command import DepositAmountCommand
 from bank.domain.account_repository import AccountRepository
+from bank.domain.exceptions.account_movements.cannot_operate_on_this_account_exception import CanNotOperateOnThisAccountException
 from bank.domain.exceptions.deposit_money.account_not_found_exception import AccountNotFoundException
 from bank.domain.historic_movement_creator import HistoricMovementCreator
 from bank.domain.historic_movement_repository import HistoricMovementRepository
@@ -16,10 +16,15 @@ class DepositMoneyCommandHandler:
 
     def handle(self, command:DepositAmountCommand):
         with transaction.atomic():
-            account_filtered = self.account_repository.get_account_by_id(source_account=command.source_account, select_for_update=True)
+            account_filtered = self.account_repository.get_account_by_id(source_account=command.source_account,select_for_update=True)
+
+            if account_filtered.user_id != command.user_id:
+                raise CanNotOperateOnThisAccountException()
 
             if account_filtered is None:
                 raise AccountNotFoundException(source_account=command.source_account)
+
+
             account_filtered.funds_amount = account_filtered.funds_amount + command.deposit_amount
             historic_movement = self.historic_movement_creator.create(
                 source_account_id=account_filtered.id,

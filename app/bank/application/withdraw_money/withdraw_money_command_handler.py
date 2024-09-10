@@ -2,6 +2,7 @@ from django.db import transaction
 
 from bank.application.withdraw_money.withdraw_money_command import WithdrawAmountCommand
 from bank.domain.account_repository import AccountRepository
+from bank.domain.exceptions.account_movements.cannot_operate_on_this_account_exception import CanNotOperateOnThisAccountException
 from bank.domain.exceptions.withdraw_money.account_not_found_exception import AccountNotFoundException
 from bank.domain.historic_movement_creator import HistoricMovementCreator
 from bank.domain.historic_movement_repository import HistoricMovementRepository
@@ -17,8 +18,12 @@ class WithdrawMoneyCommandHandler:
     def handle(self, command:WithdrawAmountCommand):
         with transaction.atomic():
             account_filtered = self.account_repository.get_account_by_id(source_account=command.source_account, select_for_update=True)
+
+            if account_filtered.user_id != command.user_id:
+                raise CanNotOperateOnThisAccountException()
+
             if account_filtered is None:
-                raise AccountNotFoundException(source_account=command.source_account)
+                raise AccountNotFoundException(account_number=command.source_account)
 
             if account_filtered.funds_amount >= command.withdraw_amount:
                 account_filtered.funds_amount = account_filtered.funds_amount - command.withdraw_amount
