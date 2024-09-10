@@ -9,7 +9,7 @@ from bank.domain.historic_movement_repository import HistoricMovementRepository
 
 
 class DbHistoricMovementRepository(HistoricMovementRepository):
-    def filter_movement(self, source_account:Optional[UUID] = None, created_at:Optional[datetime] = None):
+    def filter_movements(self, source_account:Optional[UUID] = None, created_at:Optional[datetime] = None):
         filters = Q()
         if source_account is not None:
             filters = filters & Q(source_account=source_account)

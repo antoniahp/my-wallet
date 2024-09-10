@@ -15,7 +15,7 @@ class ResetFundsAmountCommandHandler(CommandHandler):
     def handle(self, command: ResetFundsAmountCommand):
         all_accounts = self.__account_repository.filter_accounts()
         for account in all_accounts:
-           last_account_movement = self.__historic_movement_repository.filter_movement(source_account=account.id)
+           last_account_movement = self.__historic_movement_repository.filter_movements(source_account=account.id)
            funds_amount = Decimal(0.0)
            if last_account_movement:
                 funds_amount = last_account_movement[0].balance
