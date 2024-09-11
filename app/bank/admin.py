@@ -1,6 +1,6 @@
 from django.contrib import admin
 from bank.domain.account import Account
-from bank.domain.commisions_by_country import CommissionsByCountry
+from bank.domain.commissions_by_country import CommissionsByCountry
 from bank.domain.historic_movement import HistoricMovement
 from bank.domain.user import User
 
