@@ -34,7 +34,8 @@ class TransferMoneyCommandHandler:
             sender_account_filtered.funds_amount = sender_account_filtered.funds_amount - command.amount_to_send
             recipient_account_filtered.funds_amount = recipient_account_filtered.funds_amount + command.amount_to_send
 
-            historic_movement = self.historic_movement_creator.create(
+
+            historic_movement_sender = self.historic_movement_creator.create(
                 source_account_id=sender_account_filtered.id,
                 category=MovementCategories.TRANSFER.value,
                 balance=sender_account_filtered.funds_amount,
@@ -43,12 +44,20 @@ class TransferMoneyCommandHandler:
                 target_account_id=recipient_account_filtered.id
             )
 
-            self.historic_movement_repository.save_movement(historic_movement)
+            historic_movement_target = self.historic_movement_creator.create(
+                source_account_id=recipient_account_filtered.id,
+                category=MovementCategories.DEPOSIT_MONEY.value,
+                balance=recipient_account_filtered.funds_amount,
+                delta_amount=command.amount_to_send,
+                concept=command.concept,
+                target_account_id=None
+            )
+
+
+            self.historic_movement_repository.save_movement(historic_movement_sender)
+            self.historic_movement_repository.save_movement(historic_movement_target)
+
 
             self.account_repository.save_account(sender_account_filtered)
             self.account_repository.save_account(recipient_account_filtered)
-
-
-
-
 
