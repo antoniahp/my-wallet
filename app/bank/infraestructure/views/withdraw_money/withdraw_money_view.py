@@ -11,12 +11,17 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from bank.application.withdraw_money.withdraw_money_command import WithdrawAmountCommand
 from bank.application.withdraw_money.withdraw_money_command_handler import WithdrawMoneyCommandHandler
 from bank.domain.account import Account
+from bank.domain.commissions_by_country import CommissionsByCountry
 from bank.domain.historic_movement_creator import HistoricMovementCreator
 from bank.infraestructure.db_account_repository import DbAccountRepository
 from pydantic import ValidationError
 
+from bank.infraestructure.db_commissions_by_country_repository import DbCommissionsByCountryRepository
 from bank.infraestructure.db_historic_movemen_repository import DbHistoricMovementRepository
 from bank.infraestructure.views.withdraw_money.withdraw_money_schema import WithdrawMoneySchema
+
+
+
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -28,7 +33,13 @@ class WithdrawMoneyView(APIView):
         self.__db_account_repository = DbAccountRepository()
         self.__db_historic_movement_repository = DbHistoricMovementRepository()
         self.__historic_movement_creator = HistoricMovementCreator()
-        self.__withdraw_money_command_handler = WithdrawMoneyCommandHandler( account_repository=self.__db_account_repository, historic_movement_repository=self.__db_historic_movement_repository, historic_movement_creator=self.__historic_movement_creator)
+        self.__db_commissions_by_country_repository = DbCommissionsByCountryRepository()
+        self.__withdraw_money_command_handler = WithdrawMoneyCommandHandler(
+            account_repository=self.__db_account_repository,
+            historic_movement_repository=self.__db_historic_movement_repository,
+            historic_movement_creator=self.__historic_movement_creator,
+            commissions_by_country_repository = self.__db_commissions_by_country_repository
+        )
 
 
     def post(self, request):
