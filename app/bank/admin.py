@@ -1,5 +1,6 @@
 from django.contrib import admin
 from bank.domain.account import Account
+from bank.domain.calculated_commissions import CalculatedCommissions
 from bank.domain.commissions_by_country import CommissionsByCountry
 from bank.domain.historic_movement import HistoricMovement
 from bank.domain.user import User
@@ -35,3 +36,4 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Account, AccountAdmin)
 admin.site.register(HistoricMovement, HistoricMovementAdmin)
 admin.site.register(CommissionsByCountry, CommissionsByCountryAdmin)
+admin.site.register(CalculatedCommissions)

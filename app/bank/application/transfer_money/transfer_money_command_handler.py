@@ -1,7 +1,10 @@
+from decimal import Decimal
+
 from django.db import transaction
 
 from bank.application.transfer_money.transfer_money_command import TransferMoneyCommand
 from bank.domain.account_repository import AccountRepository
+from bank.domain.commisions_by_country_choices import CommissionsByCountryChoices
 from bank.domain.exceptions.account_movements.cannot_operate_on_this_account_exception import CanNotOperateOnThisAccountException
 from bank.domain.exceptions.transfer_money.recipient_account_not_found_exception import RecipientAccountNotFoundException
 from bank.domain.exceptions.transfer_money.there_is_not_enough_money_in_the_account_exception import ThereIsNotEnoughMoneyInTheAccountException
@@ -20,6 +23,13 @@ class TransferMoneyCommandHandler:
         with transaction.atomic():
             sender_account_filtered = self.account_repository.get_account_by_id(source_account=command.sender_account_id, select_for_update=True)
             recipient_account_filtered = self.account_repository.get_account_by_id(source_account=command.recipient_account_id, select_for_update=True)
+
+            if "ES" in sender_account_filtered.account_number:
+                country = CommissionsByCountryChoices.SPAIN.value
+            elif "PT" in sender_account_filtered.account_number:
+                country = CommissionsByCountryChoices.PORTUGAL.value
+            else:
+                country = CommissionsByCountryChoices.FRANCE.value
 
             if sender_account_filtered.user_id != command.user_id:
                 raise CanNotOperateOnThisAccountException()
@@ -41,7 +51,9 @@ class TransferMoneyCommandHandler:
                 balance=sender_account_filtered.funds_amount,
                 delta_amount=command.amount_to_send,
                 concept=command.concept,
-                target_account_id=recipient_account_filtered.id
+                target_account_id=recipient_account_filtered.id,
+                commission = Decimal(0),
+                country = country
             )
 
             historic_movement_target = self.historic_movement_creator.create(
