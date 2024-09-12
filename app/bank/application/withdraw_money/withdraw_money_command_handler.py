@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import transaction
 
 from bank.application.withdraw_money.withdraw_money_command import WithdrawAmountCommand
@@ -40,17 +42,23 @@ class WithdrawMoneyCommandHandler:
             if account_filtered is None:
                 raise AccountNotFoundException(account_number=command.source_account)
 
-            total = command.withdraw_amount + commission_applied.commission_percentage
+            if commission_applied is None:
+                commission_percentage = Decimal(0)
+            else:
+                commission_percentage = commission_applied.commission_percentage
+
+            total = command.withdraw_amount + commission_percentage
+
             if account_filtered.funds_amount >= total:
                 account_filtered.funds_amount = account_filtered.funds_amount - total
                 historic_movement = self.historic_movement_creator.create(
                     source_account_id=account_filtered.id,
                     category=MovementCategories.WITHDRAW_MONEY.value,
                     balance=account_filtered.funds_amount,
-                    delta_amount=command.withdraw_amount + commission_applied.commission_percentage ,
+                    delta_amount=command.withdraw_amount + commission_percentage ,
                     concept=command.concept,
                     target_account_id=None,
-                    commission=commission_applied.commission_percentage,
+                    commission=commission_percentage,
                     country=country
                 )
                 self.historic_movement_repository.save_movement(historic_movement)
