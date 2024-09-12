@@ -5,7 +5,6 @@ from django.db import transaction
 from bank.application.withdraw_money.withdraw_money_command import WithdrawAmountCommand
 from bank.domain.account_repository import AccountRepository
 from bank.domain.commisions_by_country_choices import CommissionsByCountryChoices
-from bank.domain.commissions_by_country import CommissionsByCountry
 from bank.domain.commissions_by_country_repository import CommissionsByCountryRepository
 from bank.domain.exceptions.account_movements.cannot_operate_on_this_account_exception import CanNotOperateOnThisAccountException
 from bank.domain.exceptions.withdraw_money.account_not_found_exception import AccountNotFoundException
