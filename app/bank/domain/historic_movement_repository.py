@@ -9,7 +9,7 @@ from bank.domain.historic_movement import HistoricMovement
 
 class HistoricMovementRepository(ABC):
     @abstractmethod
-    def filter_movements(self, source_account:Optional[UUID] = None, created_at:Optional[datetime] = None):
+    def filter_movements(self, country: Optional[str] = None, created_at__lte: Optional[datetime] = None,  created_at__gte: Optional[datetime] = None, source_account:Optional[UUID] = None, created_at:Optional[datetime] = None):
         pass
 
 
