@@ -1,13 +1,18 @@
+from decimal import Decimal
+from django.core.mail import EmailMessage
+
 from django.db import transaction
 
 from bank.application.transfer_money.transfer_money_command import TransferMoneyCommand
 from bank.domain.account_repository import AccountRepository
+from bank.domain.commisions_by_country_choices import CommissionsByCountryChoices
 from bank.domain.exceptions.account_movements.cannot_operate_on_this_account_exception import CanNotOperateOnThisAccountException
 from bank.domain.exceptions.transfer_money.recipient_account_not_found_exception import RecipientAccountNotFoundException
 from bank.domain.exceptions.transfer_money.there_is_not_enough_money_in_the_account_exception import ThereIsNotEnoughMoneyInTheAccountException
 from bank.domain.historic_movement_creator import HistoricMovementCreator
 from bank.domain.historic_movement_repository import HistoricMovementRepository
 from bank.domain.movement_categories import MovementCategories
+from config import settings
 
 
 class TransferMoneyCommandHandler:
@@ -20,6 +25,13 @@ class TransferMoneyCommandHandler:
         with transaction.atomic():
             sender_account_filtered = self.account_repository.get_account_by_id(source_account=command.sender_account_id, select_for_update=True)
             recipient_account_filtered = self.account_repository.get_account_by_id(source_account=command.recipient_account_id, select_for_update=True)
+
+            if "ES" in sender_account_filtered.account_number:
+                country = CommissionsByCountryChoices.SPAIN.value
+            elif "PT" in sender_account_filtered.account_number:
+                country = CommissionsByCountryChoices.PORTUGAL.value
+            else:
+                country = CommissionsByCountryChoices.FRANCE.value
 
             if sender_account_filtered.user_id != command.user_id:
                 raise CanNotOperateOnThisAccountException()
@@ -41,7 +53,9 @@ class TransferMoneyCommandHandler:
                 balance=sender_account_filtered.funds_amount,
                 delta_amount=command.amount_to_send,
                 concept=command.concept,
-                target_account_id=recipient_account_filtered.id
+                target_account_id=recipient_account_filtered.id,
+                commission = Decimal(0),
+                country = country
             )
 
             historic_movement_target = self.historic_movement_creator.create(
@@ -50,7 +64,9 @@ class TransferMoneyCommandHandler:
                 balance=recipient_account_filtered.funds_amount,
                 delta_amount=command.amount_to_send,
                 concept=command.concept,
-                target_account_id=None
+                target_account_id=None,
+                commission = Decimal(0),
+                country = country
             )
 
 
@@ -60,4 +76,28 @@ class TransferMoneyCommandHandler:
 
             self.account_repository.save_account(sender_account_filtered)
             self.account_repository.save_account(recipient_account_filtered)
+
+            # Enviar el email al sender
+            email = EmailMessage(
+                "Your last movement",
+                f"""<b>{sender_account_filtered.user.name} {sender_account_filtered.user.surname}</b> has enviado {command.amount_to_send} a {recipient_account_filtered.user.name} con conceptp: {command.concept}.
+                        <br>
+                        <i>Thank you for trusting MyWallet to be your bank</i> 🫱🏻‍🫲🏼""",
+                settings.DEFAULT_FROM_EMAIL,
+                [f"{sender_account_filtered.user.email}"],
+            )
+
+            email.send()
+
+            # Enviar el email al receptor
+            email = EmailMessage(
+                "Your last movement",
+                f"""<b>{recipient_account_filtered.user.name} {recipient_account_filtered.user.surname}</b> has recibido {command.amount_to_send} de  {sender_account_filtered.user.name} con conceptp: {command.concept}.
+                                    <br>
+                                    <i>Thank you for trusting MyWallet to be your bank</i> 🫱🏻‍🫲🏼""",
+                settings.DEFAULT_FROM_EMAIL,
+                [f"{recipient_account_filtered.user.email}"],
+            )
+
+            email.send()
 
