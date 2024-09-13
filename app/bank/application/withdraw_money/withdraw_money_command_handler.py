@@ -1,4 +1,5 @@
 from decimal import Decimal
+from django.core.mail import EmailMessage
 
 from django.db import transaction
 
@@ -11,6 +12,7 @@ from bank.domain.exceptions.withdraw_money.account_not_found_exception import Ac
 from bank.domain.historic_movement_creator import HistoricMovementCreator
 from bank.domain.historic_movement_repository import HistoricMovementRepository
 from bank.domain.movement_categories import MovementCategories
+from config import settings
 
 
 class WithdrawMoneyCommandHandler:
@@ -62,3 +64,17 @@ class WithdrawMoneyCommandHandler:
                 )
                 self.historic_movement_repository.save_movement(historic_movement)
                 self.account_repository.save_account(account_filtered)
+
+                # Enviar el email
+                email = EmailMessage(
+                    "Your last movement",
+                    f"""<b>{account_filtered.user.name} {account_filtered.user.surname}</b> you have withdraw {command.withdraw_amount} of account {account_filtered.account_number} with concept: {command.concept}.
+                    A commission of {commission_percentage} has been applied.
+                    Currently has {account_filtered.funds_amount} left.
+                    <br>
+                    <i>Thank you for trusting MyWallet to be your bank</i> 🫱🏻‍🫲🏼""",
+                    settings.DEFAULT_FROM_EMAIL,
+                    [f"{account_filtered.user.email}"],
+                )
+
+                email.send()
