@@ -6,7 +6,9 @@ from bank.domain.user_repository import UserRepository
 
 
 class CreateAccountCommandHandler:
-    def __init__(self, account_repository:AccountRepository, account_creator:AccountCreator, user_repository:UserRepository):
+    def __init__(self, account_repository:AccountRepository, 
+                 account_creator:AccountCreator, 
+                 user_repository:UserRepository):
         self.account_repository = account_repository
         self.account_creator = account_creator
         self.user_repository = user_repository

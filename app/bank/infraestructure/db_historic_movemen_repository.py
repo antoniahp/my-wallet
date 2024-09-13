@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
 from uuid import UUID
 
@@ -9,18 +9,18 @@ from bank.domain.historic_movement_repository import HistoricMovementRepository
 
 
 class DbHistoricMovementRepository(HistoricMovementRepository):
-    def filter_movements(self, country: Optional[str] = None, created_at__lte: Optional[datetime] = None,  created_at__gte: Optional[datetime] = None, source_account:Optional[UUID] = None, created_at:Optional[datetime] = None):
+    def filter_movements(self, country: Optional[str] = None, created_at__lte: Optional[datetime] = None,  created_at__gte: Optional[datetime] = None, source_account:Optional[UUID] = None, created_at:Optional[date] = None):
         filters = Q()
         if country is not None:
             filters = filters & Q(country=country)
+        if source_account is not None:
+            filters = filters & Q(source_account=source_account)
         if created_at__lte is not None:
             filters = filters & Q(created_at__lte=created_at__lte)
         if created_at__gte is not None:
             filters = filters & Q(created_at__gte=created_at__gte)
-        if source_account is not None:
-            filters = filters & Q(source_account=source_account)
-        if created_at is not None:
-            filters = filters & Q(created_at__gte=created_at)
+        elif created_at is not None:
+            filters = filters & Q(created_at__date=created_at)
 
         movements = HistoricMovement.objects.filter(filters).order_by("-created_at")
         return movements
